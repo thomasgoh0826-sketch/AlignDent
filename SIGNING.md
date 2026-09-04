@@ -2,7 +2,7 @@
 
 ## 当前签名
 
-AlignDent `v0.1.2` 的 Windows 安装包使用 Zyls 自签名代码证书进行 Authenticode 签名，并使用公开时间戳服务记录签署时间。
+AlignDent `v0.1.3` 的 Windows 安装包使用 Zyls 自签名代码证书进行 Authenticode 签名，并使用公开时间戳服务记录签署时间。
 
 - 签名者：`CN=Zyls, O=Zyls`
 - SHA-1 证书指纹：`B2E06D26E190073DBE3181E08EC31325F09D123A`
@@ -25,11 +25,11 @@ AlignDent `v0.1.2` 的 Windows 安装包使用 Zyls 自签名代码证书进行 
 ## 核对安装包
 
 ```powershell
-$file = '.\AlignDent-Setup-0.1.2-x64.exe'
+$file = '.\AlignDent-Setup-0.1.3-x64.exe'
 Get-FileHash $file -Algorithm SHA256
 Get-AuthenticodeSignature $file | Format-List Status,StatusMessage,SignerCertificate,TimeStamperCertificate
 ```
 
 SHA-256 应为：
 
-`9FACAA7BB390B558C123C01E88AD39F0E207A2003C9BE9D725F3296CDBD616F0`
+`0999DD1578DB68BD58F859D36F72E037F7DB1F1297FAAAC4994FC9DCCDB4A1E9`

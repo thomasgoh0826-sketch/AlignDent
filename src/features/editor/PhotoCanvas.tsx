@@ -95,7 +95,6 @@ export function PhotoCanvas({
         placement={editor.placement}
         canUndo={editor.canUndo}
         canRedo={editor.canRedo}
-        dirty={editor.dirty}
         onStart={editor.startPlacement}
         onUndo={editor.undo}
         onRedo={editor.redo}

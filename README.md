@@ -21,7 +21,7 @@ AlignDent 帮助牙医和诊所批量整理患者正面照片：自动摆正头�
 
 ## Zyls 数字签名
 
-`v0.1.2` 安装包带有 Zyls 自签名 Authenticode 签名和可信时间戳。公开证书随 Release 提供，证书指纹为：
+`v0.1.3` 安装包带有 Zyls 自签名 Authenticode 签名和可信时间戳。公开证书随 Release 提供，证书指纹为：
 
 `B2E06D26E190073DBE3181E08EC31325F09D123A`
 

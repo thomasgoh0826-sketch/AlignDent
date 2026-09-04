@@ -64,4 +64,22 @@ describe('three-point correction editor', () => {
     fireEvent.click(screen.getByRole('button', { name: '确认此张' }))
     expect(onConfirm).toHaveBeenCalledOnce()
   })
+
+  it('allows confirming the automatically detected points without requiring a manual edit', () => {
+    const onConfirm = vi.fn()
+    render(<PhotoCanvas imageUrl="/demo/demo-portrait.png" detected={detected} onConfirm={onConfirm} />)
+
+    const confirmButton = screen.getByRole('button', { name: '确认此张' })
+    expect(confirmButton).toBeEnabled()
+    fireEvent.click(confirmButton)
+    expect(onConfirm).toHaveBeenCalledWith(detected)
+  })
+
+  it('disables confirmation only while a new three-point placement is incomplete', async () => {
+    const user = userEvent.setup()
+    render(<PhotoCanvas imageUrl="/demo/demo-portrait.png" detected={detected} />)
+
+    await user.click(screen.getByRole('button', { name: '重新标记三点' }))
+    expect(screen.getByRole('button', { name: '确认此张' })).toBeDisabled()
+  })
 })

@@ -12,7 +12,6 @@ export function OverlayControls({
   placement,
   canUndo,
   canRedo,
-  dirty,
   onStart,
   onUndo,
   onRedo,
@@ -22,7 +21,6 @@ export function OverlayControls({
   placement: PlacementStep
   canUndo: boolean
   canRedo: boolean
-  dirty: boolean
   onStart: () => void
   onUndo: () => void
   onRedo: () => void
@@ -40,7 +38,7 @@ export function OverlayControls({
         <button type="button" className="icon-button" aria-label="撤销" disabled={!canUndo} onClick={onUndo}><ArrowUUpLeft size={18} /></button>
         <button type="button" className="icon-button" aria-label="重做" disabled={!canRedo} onClick={onRedo}><ArrowUUpRight size={18} /></button>
         <button type="button" className="icon-button" aria-label="重置定位点" onClick={onReset}><ArrowCounterClockwise size={18} /></button>
-        <button type="button" className="secondary-button compact-button" disabled={!dirty} onClick={onConfirm}>确认此张</button>
+        <button type="button" className="secondary-button compact-button" disabled={placement !== undefined && placement !== 'complete'} onClick={onConfirm}>确认此张</button>
       </div>
     </div>
   )

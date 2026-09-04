@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { BUILT_IN_TEMPLATES } from '../domain/templates'
 import type { CommandPatch, DentalTemplate } from '../domain/types'
 import type { LandmarkSet, TransformPlan } from '../domain/types'
+import { planTransform } from '../vision/transformPlanner'
 
 export type WorkspacePhotoStatus =
   | 'pending'
@@ -68,7 +69,15 @@ function fileName(filePath: string) {
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   ...initialState,
-  loadDemo: () => {
+  loadDemo: () => set((state) => {
+    const landmarks: LandmarkSet = {
+      leftEye: { x: 0.385, y: 0.345 }, rightEye: { x: 0.615, y: 0.325 }, nose: { x: 0.5, y: 0.515 },
+      faceOval: [],
+      confidence: 0.99,
+      faceCount: 1,
+    }
+    const sourceWidth = 1024
+    const sourceHeight = 1280
     const demo: WorkspacePhoto = {
       id: 'demo-portrait',
       name: '虚构演示正面照.jpg',
@@ -76,15 +85,13 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       previewUrl: './demo/demo-portrait.png',
       status: 'ready',
       isDemo: true,
-      landmarks: {
-        leftEye: { x: 0.385, y: 0.337 }, rightEye: { x: 0.615, y: 0.337 }, nose: { x: 0.5, y: 0.515 },
-        faceOval: [], confidence: 0.99, faceCount: 1,
-      },
-      sourceWidth: 1024,
-      sourceHeight: 1280,
+      landmarks,
+      transformPlan: planTransform({ sourceWidth, sourceHeight, landmarks, template: state.activeTemplate }),
+      sourceWidth,
+      sourceHeight,
     }
-    set({ photos: [demo], activePhotoId: demo.id, viewMode: 'standard' })
-  },
+    return { photos: [demo], activePhotoId: demo.id, viewMode: 'standard' }
+  }),
   importPaths: (paths) => {
     const photos = paths.map((sourcePath, index) => ({
       id: `photo-${Date.now()}-${index}`,

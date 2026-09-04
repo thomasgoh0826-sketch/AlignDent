@@ -43,6 +43,32 @@ describe('A-layout professional workspace', () => {
     expect(screen.getByText('Built by Zyls')).toBeVisible()
   })
 
+  it('renders the selected standard view with the real affine correction', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: '查看示例' }))
+
+    expect(screen.getByTestId('standardized-image')).toHaveAttribute('viewBox', '0 0 1600 2000')
+    expect(screen.getByTestId('standardized-image-source').getAttribute('transform')).toMatch(/^matrix\(/)
+    expect(screen.getByText(/双瞳已水平/)).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: '调整定位点' }))
+    expect(screen.getByRole('button', { name: '原图' })).toHaveClass('is-selected')
+    expect(screen.getByTestId('photo-canvas-surface')).toBeVisible()
+    expect(screen.queryByTestId('standardized-image')).not.toBeInTheDocument()
+  })
+
+  it('recalculates the standard image when the output template changes', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: '查看示例' }))
+
+    await user.selectOptions(screen.getByRole('combobox', { name: '图片比例' }), '1:1')
+
+    expect(screen.getByTestId('standardized-image')).toHaveAttribute('viewBox', '0 0 1600 1600')
+  })
+
   it('imports multiple local paths and changes the primary action to processing', async () => {
     const chooseImages = vi.fn().mockResolvedValue([
       'C:\\Patients\\front.jpg',

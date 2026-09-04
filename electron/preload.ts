@@ -1,8 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import packageMetadata from '../package.json'
 
 const bridge = Object.freeze({
   platform: process.platform,
-  version: '0.1.0',
+  version: packageMetadata.version,
   files: Object.freeze({
     chooseImages: () => ipcRenderer.invoke('files:choose-images') as Promise<string[]>,
     chooseFolder: () => ipcRenderer.invoke('files:choose-folder') as Promise<string[]>,

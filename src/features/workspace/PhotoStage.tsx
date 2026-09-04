@@ -8,6 +8,7 @@ import {
 } from '@phosphor-icons/react'
 import type { WorkspacePhoto } from '../../store/useWorkspaceStore'
 import { PhotoCanvas } from '../editor/PhotoCanvas'
+import { StandardPreview } from '../editor/StandardPreview'
 import type { LandmarkSet } from '../../domain/types'
 
 export function PhotoStage({
@@ -33,6 +34,18 @@ export function PhotoStage({
   safeTop: number
   safeBottom: number
 }) {
+  const showStandard = viewMode === 'standard'
+    && photo.previewUrl
+    && photo.landmarks
+    && photo.transformPlan
+    && photo.sourceWidth
+    && photo.sourceHeight
+  const frameRatio = showStandard
+    ? `${photo.transformPlan!.outputWidth} / ${photo.transformPlan!.outputHeight}`
+    : photo.sourceWidth && photo.sourceHeight
+      ? `${photo.sourceWidth} / ${photo.sourceHeight}`
+      : '4 / 5'
+
   return (
     <section className="photo-stage" aria-label="照片预览">
       <div className="stage-toolbar">
@@ -76,8 +89,22 @@ export function PhotoStage({
         </div>
       </div>
       <div className="stage-surface">
-        <div className="portrait-frame">
-          {photo.previewUrl && photo.landmarks ? (
+        <div className="portrait-frame" style={{ aspectRatio: frameRatio }}>
+          {showStandard ? (
+            <StandardPreview
+              imageUrl={photo.previewUrl!}
+              imageAlt={photo.isDemo ? '虚构演示人像' : `${photo.name} 预览`}
+              sourceWidth={photo.sourceWidth!}
+              sourceHeight={photo.sourceHeight!}
+              landmarks={photo.landmarks!}
+              plan={photo.transformPlan!}
+              gridVisible={gridVisible}
+              safeTop={safeTop}
+              safeBottom={safeBottom}
+              isDemo={Boolean(photo.isDemo)}
+              onEdit={() => onViewMode('original')}
+            />
+          ) : photo.previewUrl && photo.landmarks ? (
             <PhotoCanvas imageUrl={photo.previewUrl} detected={photo.landmarks} gridVisible={gridVisible} imageAlt={photo.isDemo ? '虚构演示人像' : `${photo.name} 预览`} isDemo={photo.isDemo} safeTop={safeTop} safeBottom={safeBottom} onChange={onLandmarksChange} onConfirm={onConfirm} />
           ) : photo.previewUrl ? (
             <img className="plain-preview" src={photo.previewUrl} alt={`${photo.name} 预览`} />
@@ -92,7 +119,7 @@ export function PhotoStage({
       <div className="stage-status">
         <div>
           <strong>{photo.name}</strong>
-          <span>{photo.error ?? '1600 × 2000 px'}</span>
+          <span>{photo.error ?? (photo.transformPlan ? `${photo.transformPlan.outputWidth} × ${photo.transformPlan.outputHeight} px` : '等待生成标准图')}</span>
         </div>
         <span className={`status-badge status-${photo.status}`}>
           {photo.status === 'ready' ? '已自动对齐' : photo.status === 'reviewed' ? '已人工确认' : photo.status === 'pending' ? '等待处理' : photo.status === 'analyzing' ? '本地识别中' : photo.status === 'failed' ? '处理失败' : '需要检查'}

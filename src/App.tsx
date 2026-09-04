@@ -114,7 +114,8 @@ export function App() {
     await Promise.all([worker(), worker()])
     processor.dispose()
     setProcessing(false)
-  }, [activeTemplate, updatePhoto])
+    if (done > 0 && !cancelRequested.current) setViewMode('standard')
+  }, [activeTemplate, setViewMode, updatePhoto])
 
   const handleExport = useCallback(async () => {
     const bridge = window.alignDent
@@ -147,6 +148,30 @@ export function App() {
     updatePhoto(photo.id, { landmarks, transformPlan })
   }, [activeTemplate, updatePhoto])
 
+  const replanPhotos = useCallback((template: DentalTemplate) => {
+    const state = useWorkspaceStore.getState()
+    state.photos.forEach((photo) => {
+      if (!photo.landmarks || !photo.sourceWidth || !photo.sourceHeight) return
+      const transformPlan = planTransform({
+        sourceWidth: photo.sourceWidth,
+        sourceHeight: photo.sourceHeight,
+        landmarks: photo.landmarks,
+        template,
+      })
+      updatePhoto(photo.id, { transformPlan })
+    })
+  }, [updatePhoto])
+
+  const handleRatio = useCallback((ratio: DentalTemplate['ratio']) => {
+    selectRatio(ratio)
+    replanPhotos(useWorkspaceStore.getState().activeTemplate)
+  }, [replanPhotos, selectRatio])
+
+  const handleTemplateValue = useCallback((field: 'outputWidth' | 'eyeLineY' | 'noseX', value: number) => {
+    setTemplateValue(field, value)
+    replanPhotos(useWorkspaceStore.getState().activeTemplate)
+  }, [replanPhotos, setTemplateValue])
+
   const hasPending = photos.some((photo) => photo.status === 'pending')
   return (
     <div className="app-shell" data-theme={theme}>
@@ -156,12 +181,12 @@ export function App() {
         <TopBar theme={theme} onToggleTheme={toggleTheme} onApplyCommand={applyCommand} statusMessage={lastCommandApplied} />
         <main id="main-content" className={photos.length > 0 ? 'main-content has-photos' : 'main-content'}>
           {photos.length === 0 ? <EmptyState onImport={handleImport} onImportFolder={handleImportFolder} onDemo={loadDemo} onUrlImport={() => setUrlImportOpen(true)} /> : <div className="workspace-center">
-            {activePhoto && <PhotoStage photo={activePhoto} gridVisible={gridVisible} viewMode={viewMode} safeTop={activeTemplate.safeTop} safeBottom={activeTemplate.safeBottom} onToggleGrid={toggleGrid} onViewMode={setViewMode} onLandmarksChange={updateActiveLandmarks} onConfirm={() => markReviewed(activePhoto.id)} onReanalyze={() => { updatePhoto(activePhoto.id, { status: 'pending' }); void handleProcess() }} />}
+            {activePhoto && <PhotoStage photo={activePhoto} gridVisible={gridVisible} viewMode={viewMode} safeTop={activeTemplate.safeTop} safeBottom={activeTemplate.safeBottom} onToggleGrid={toggleGrid} onViewMode={setViewMode} onLandmarksChange={updateActiveLandmarks} onConfirm={() => { markReviewed(activePhoto.id); setViewMode('standard') }} onReanalyze={() => { setViewMode('original'); updatePhoto(activePhoto.id, { status: 'pending' }); void handleProcess() }} />}
             <PhotoQueue photos={photos} activeId={activePhotoId} onSelect={selectPhoto} />
           </div>}
         </main>
       </div>
-      {photos.length > 0 && <Inspector photos={photos} template={activeTemplate} onRatio={selectRatio} onTemplateValue={setTemplateValue} processing={processing} progress={progress} onPrimary={hasPending ? handleProcess : handleExport} onCancel={() => { cancelRequested.current = true }} />}
+      {photos.length > 0 && <Inspector photos={photos} template={activeTemplate} onRatio={handleRatio} onTemplateValue={handleTemplateValue} processing={processing} progress={progress} onPrimary={hasPending ? handleProcess : handleExport} onCancel={() => { cancelRequested.current = true }} />}
       {licenseOpen && <LicenseScreen deviceCode={deviceCode} onClose={() => setLicenseOpen(false)} onActivate={async (token) => {
         const result = await window.alignDent?.license?.activate(token) ?? { ok: false as const }
         if (result.ok) setLicensed(true)

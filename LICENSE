@@ -1,0 +1,56 @@
+Zyls Source-Available No-Derivatives License 1.0
+
+Copyright (c) 2026 Zyls. All rights reserved.
+
+1. Permission
+
+You may:
+
+- view and study the source code in this repository;
+- download and run unmodified official AlignDent releases for your own personal
+  or internal professional use;
+- use GitHub's built-in viewing and forking features as permitted by GitHub's
+  Terms of Service; and
+- create changes solely for the purpose of submitting them to Zyls as a pull
+  request or other proposed contribution.
+
+2. Restrictions
+
+Without prior written permission from Zyls, you may not:
+
+- publish, distribute, sublicense, sell, rent, host, or otherwise provide the
+  source code or compiled software to another person;
+- publish or distribute modified versions, derivative works, ports, forks,
+  rebranded versions, or works substantially based on AlignDent;
+- remove or alter Zyls, AlignDent, copyright, attribution, or license notices;
+- use the Zyls or AlignDent names, logos, or other brand assets to imply
+  endorsement; or
+- use any part of the software to create a competing distributed product.
+
+3. Contributions
+
+By intentionally submitting a contribution to this repository, you grant Zyls
+a perpetual, worldwide, royalty-free, irrevocable license to use, modify,
+publish, distribute, sublicense, and relicense that contribution as part of
+AlignDent or related Zyls products. You retain copyright in your contribution.
+
+4. No medical warranty
+
+AlignDent is an image organization tool, not a medical device or diagnostic
+system. The software is provided "AS IS", without warranties of any kind. To
+the maximum extent permitted by law, Zyls is not liable for any claim, damage,
+or other liability arising from the software or its use.
+
+5. Termination
+
+Your permission under this license ends automatically if you breach these
+terms. Sections intended by their nature to survive termination will survive.
+
+6. Earlier release
+
+AlignDent v0.1.0 was previously offered under the MIT License. Rights already
+received under that version are not revoked by this license. This license
+applies to AlignDent v0.1.1 and later versions carrying this notice.
+
+This license is source-available and is not an Open Source Initiative-approved
+open-source license.

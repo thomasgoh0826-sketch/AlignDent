@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dist-electron/
+release/
+coverage/
+.vite/
+.superpowers/
+.artifacts/
+test-results/
+playwright-report/
+.worktrees/
+.seller-secrets/
+C/
+*.log
+.env
+.env.*
+!.env.example

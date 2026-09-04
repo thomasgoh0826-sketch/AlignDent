@@ -1,0 +1,42 @@
+name: Bug 报告
+description: 报告可以重复出现的软件问题（请勿上传患者资料）
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "感谢反馈。请勿上传真实患者照片、姓名、病历号或其他隐私信息。"
+  - type: input
+    id: version
+    attributes:
+      label: AlignDent 版本
+      placeholder: "例如 0.1.1"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows 版本
+      placeholder: "例如 Windows 11 24H2"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 请说明做了什么、发生了什么。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我没有附带患者或其他人的可识别资料
+          required: true

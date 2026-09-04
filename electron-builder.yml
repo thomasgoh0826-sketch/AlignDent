@@ -1,0 +1,31 @@
+appId: asia.vitakiosk.aligndent
+productName: AlignDent
+copyright: Copyright © 2026 Zyls. All rights reserved.
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+asar: true
+asarUnpack:
+  - node_modules/sharp/**/*
+  - node_modules/@img/**/*
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: AlignDent-Setup-${version}-x64.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: AlignDent
+  uninstallDisplayName: AlignDent
+  deleteAppDataOnUninstall: false
+publish: null
